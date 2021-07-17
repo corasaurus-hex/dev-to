@@ -1,0 +1,6 @@
+{:tasks
+ {:requires ([babashka.process :refer [process]])
+  open (process ["open" "https://dev.to/corasaurus_hex/read-environment-variables-in-clojure-e6i"])
+  test (clojure
+        {:extra-env {:FOO "BAR"}}
+        "-Mtest")}}
