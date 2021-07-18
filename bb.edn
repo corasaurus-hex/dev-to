@@ -1,20 +1,6 @@
-{:tasks {:requires ([babashka.fs :as fs]
-                    [clojure.edn :as edn]
-                    [clojure.java.io :as io])
-         :init (do (defn read-edn-file
-                     [path]
-                     (with-open [in (java.io.PushbackReader. (io/reader path))]
-                       (let [edn-seq (repeatedly (partial edn/read {:eof :edn/EOF} in))]
-                         (doall (take-while (partial not= :edn/EOF) edn-seq)))))
-                   (defn find-test-task
-                     [bb-edn]
-                     (some-> bb-edn
-                             read-edn-file
-                             first
-                             :tasks
-                             (get 'test))))
-         test (do (doseq [bb-edn (map str (fs/glob "." "*/bb.edn"))]
-                    (when (find-test-task bb-edn)
-                      (println "-- starting tests for:" bb-edn)
-                      (shell {:dir (-> bb-edn fs/parent str)} "bb test")
-                      (println "\n-- ended tests for:" bb-edn "\n\n"))))}}
+{:paths ["src"]
+ :tasks {:requires ([posts])
+         test (doseq [post-path (posts/paths-to-posts-with-tests ".")]
+                (println "-- starting tests for:" post-path)
+                (shell {:dir post-path} "bb test")
+                (println "\n-- ended tests for:" post-path "\n\n"))}}
