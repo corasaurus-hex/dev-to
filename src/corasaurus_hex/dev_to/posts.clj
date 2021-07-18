@@ -1,4 +1,4 @@
-(ns dev-to.posts
+(ns corasaurus-hex.dev-to.posts
   (:require [babashka.fs :as fs]
             [clojure.edn :as edn]
             [clojure.java.io :as io]))
